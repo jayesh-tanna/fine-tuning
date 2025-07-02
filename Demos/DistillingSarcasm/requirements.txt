@@ -1,5 +1,5 @@
 # Core libraries
-python-dotenv  # For loading environment variables from .env files
+python-dotenv==0.21.0  # For loading environment variables from .env files
 
 # Data manipulation and visualization
 pandas  # For data manipulation and analysis
