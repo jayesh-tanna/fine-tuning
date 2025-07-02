@@ -10,7 +10,7 @@ This repository contains a collection of sample datasets that can be used to tes
 - These datasets can be used for experimental runs, and to check the end-to-end flows while running customization jobs on the [Azure AI Foundry](http://ai.azure.com/). Note, that any training jobs can incur costs on the subscription.
 
 ## Demos
-This these demos showcase features or end-to-end experiences related to fine-tuning in AI Foundry.
+These demos showcase features or end-to-end experiences related to fine-tuning in AI Foundry.
 
 ## Trademarks
 
