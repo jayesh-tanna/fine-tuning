@@ -1,6 +1,6 @@
 # Notice
 
-This is a sample training and validation data. This was curated using [this](https://github.com/medmcqa/medmcqa) as the reference dataset.
+This is a sample training and validation data, along with a sample grader. This was curated using [this](https://github.com/medmcqa/medmcqa) as the reference dataset.
 
 ## Dataset Summary
 
@@ -34,3 +34,6 @@ The dataset contains questions about the following topics:
 - Skin
 - Preventive & Social Medicine (PSM)
 - Surgery
+
+## Grader
+We've provided a simple string check grader, which checks if the predicted answer matches the reference answer.
