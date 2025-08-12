@@ -1,22 +1,19 @@
 # Import required libraries
-import requests
-import time
-import json
-import asyncio
-
-from dotenv import load_dotenv
 import os
+from pydoc import cli
+from turtle import pu
+from dotenv import load_dotenv
+from openai import AsyncOpenAI
 
 # Load environment variables from the .env file
 load_dotenv(override=True)
 
 # API keys and endpoint
 AZURE_API_KEY = os.getenv("AZURE_API_KEY")
-AZURE_API_ENDPOINT = os.getenv("AZURE_API_ENDPOINT")
-API_VERSION = os.getenv("API_VERSION")
+AZURE_API_ENDPOINT = os.getenv("AZURE_API_ENDPOINT", "") + "/openai/v1"
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_API_ENDPOINT = os.getenv("OPENAI_API_BASE")
+OPENAI_API_ENDPOINT = os.getenv("OPENAI_API_BASE", "") + "/v1"
 
 async def upload_file(file_name: str, file_path: str, purpose: str = "fine-tune") -> str:
     """
@@ -33,80 +30,35 @@ async def upload_file(file_name: str, file_path: str, purpose: str = "fine-tune"
     """
     use_openai = os.getenv("OAI_API_TYPE", "azure").lower() == "openai"
 
-    if use_openai:
-        # OpenAI file check logic
-        print("Using OpenAI API for file upload...")
-        headers = {
-            'Authorization': f'Bearer {OPENAI_API_KEY}',
-        }
+    base_url = AZURE_API_ENDPOINT if not use_openai else OPENAI_API_ENDPOINT
+    api_key = AZURE_API_KEY if not use_openai else OPENAI_API_KEY
 
-        # Check if the file already exists
-        list_response = await asyncio.to_thread(
-            requests.get,
-            f'{OPENAI_API_ENDPOINT}/v1/files',
-            headers=headers
-        )
+    print(f"Using {'OpenAI' if use_openai else 'Azure'} API for file upload...")
 
-        if list_response.status_code in (200, 201):
-            files = list_response.json().get('data', [])
-            for file in files:
-                if file.get('filename') == file_name:
-                    print(f"File '{file_name}' already exists on OpenAI. Returning existing file ID.")
-                    return file.get('id', '')
+    client = AsyncOpenAI(
+        base_url=base_url,
+        api_key=api_key
+    )
 
-        # File does not exist, proceed with upload
-        with open(file_path, 'rb') as file:
-            response = await asyncio.to_thread(
-                requests.post,
-                f'{OPENAI_API_ENDPOINT}/v1/files',
-                headers=headers,
-                files={"file": file},
-                data={"purpose": purpose}
+    # Check if the file already exists
+    list_response = await client.files.list()
+
+    files = list_response.data
+    for file in files:
+        if file.filename == file_name:
+            print(f"File '{file_name}' already exists on OpenAI. Returning existing file ID.")
+            return file.id
+
+    # File does not exist, proceed with upload
+    try:
+        with open(file_path, 'rb') as f:
+            response = await client.files.create(
+                file=f,
+                purpose= purpose, # type: ignore
             )
 
-        if response.status_code in (201, 200):
-            print("File uploaded successfully to OpenAI.")
-            return response.json().get('id', '')
-        else:
-            print(f"Failed to upload file to OpenAI. Status Code: {response.status_code}")
-            print(response.text)
-            return ''
-    else:
-        # Azure file check logic
-        print("Using Azure API for file upload...")
-        list_response = await asyncio.to_thread(
-            requests.get,
-            f'{AZURE_API_ENDPOINT}/openai/files',
-            params={'api-version': f"{API_VERSION}"},
-            headers={
-                'api-key': AZURE_API_KEY,
-            }
-        )
-
-        if list_response.status_code in (200, 201):
-            files = list_response.json().get('data', [])
-            for file in files:
-                if file.get('filename') == file_name:
-                    print(f"File '{file_name}' already exists on Azure. Returning existing file ID.")
-                    return file.get('id', '')
-
-        # File does not exist, proceed with upload
-        with open(file_path, 'rb') as file:
-            response = await asyncio.to_thread(
-                requests.post,
-                f'{AZURE_API_ENDPOINT}/openai/files',
-                params={'api-version': f"{API_VERSION}"},
-                headers={
-                    'api-key': AZURE_API_KEY,
-                },
-                files={"file": (file_name, file, 'multipart/form-data')},
-                data={"purpose": purpose}
-            )
-
-        if response.status_code in (201, 200):
-            print("File uploaded successfully to Azure.")
-            return response.json().get('id', '')
-        else:
-            print(f"Failed to upload file to Azure. Status Code: {response.status_code}")
-            print(response.text)
-            return ''
+        print(f"File uploaded successfully to {'OpenAI' if use_openai else 'Azure'}.")
+        return response.id
+    except Exception as e:
+        print(f"Failed to upload file to {'OpenAI' if use_openai else 'Azure'}: {e}")
+        return ''

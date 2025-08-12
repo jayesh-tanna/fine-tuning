@@ -8,21 +8,19 @@ load_dotenv()
 
 # API keys and endpoint
 OAI_API_TYPE = os.getenv("OAI_API_TYPE", "azure").lower()
-AZURE_API_KEY = os.getenv("AZURE_API_KEY")
-AZURE_API_ENDPOINT = os.getenv("AZURE_API_ENDPOINT")
-API_VERSION = os.getenv("API_VERSION")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_API_BASE = os.getenv("OPENAI_API_BASE")
+AZURE_API_KEY = os.getenv("AZURE_API_KEY", None)
+AZURE_API_ENDPOINT = os.getenv("AZURE_API_ENDPOINT", "") + "/openai/v1"
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", None)
+OPENAI_API_BASE = os.getenv("OPENAI_API_BASE", "") + "/v1"
 
-# Initialize the OpenAI or AzureOpenAI client
-if OAI_API_TYPE == "openai":
-    client = OpenAI(api_key=OPENAI_API_KEY)
-elif OAI_API_TYPE == "azure":
-    client = AzureOpenAI(api_key=AZURE_API_KEY, azure_endpoint=AZURE_API_ENDPOINT, api_version=API_VERSION)
-else:
-    raise ValueError("Invalid OAI_API_TYPE. Must be 'openai' or 'azure'.")
+# Initialize the OpenAI or AzureOpenAI client based on the API type
+base_url = AZURE_API_ENDPOINT if OAI_API_TYPE != "openai" else OPENAI_API_BASE
+api_key = AZURE_API_KEY if OAI_API_TYPE != "openai" else OPENAI_API_KEY
 
-
+client = OpenAI(
+    base_url=base_url,
+    api_key=api_key
+)
 
 def create_finetune_sft(training_file_id: str, model: str, suffix: str = None, hyperparameters: dict = None):
     """
