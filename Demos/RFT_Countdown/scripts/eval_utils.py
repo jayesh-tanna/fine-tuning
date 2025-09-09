@@ -315,6 +315,111 @@ async def create_eval( name: str, grader_model: str, pass_threshold: float):
             ]
         )
 
+python_grader_source = """
+import json, re, ast
+
+
+def safe_eval(e):
+    return _eval(ast.parse(e, mode='eval').body)
+
+
+def _eval(n):
+    if isinstance(n, ast.Constant):
+        return n.value
+
+    if isinstance(n, ast.BinOp) and type(n.op) in {
+        ast.Add: lambda a, b: a + b,
+        ast.Sub: lambda a, b: a - b,
+        ast.Mult: lambda a, b: a * b,
+        ast.Div: lambda a, b: a / b,
+        ast.FloorDiv: lambda a, b: a // b,
+        ast.Mod: lambda a, b: a % b,
+        ast.Pow: lambda a, b: a ** b,
+    }:
+        return {
+            ast.Add: lambda a, b: a + b,
+            ast.Sub: lambda a, b: a - b,
+            ast.Mult: lambda a, b: a * b,
+            ast.Div: lambda a, b: a / b,
+            ast.FloorDiv: lambda a, b: a // b,
+            ast.Mod: lambda a, b: a % b,
+            ast.Pow: lambda a, b: a ** b,
+        }[type(n.op)](_eval(n.left), _eval(n.right))
+
+    if isinstance(n, ast.UnaryOp) and type(n.op) in {
+        ast.UAdd: lambda a: +a,
+        ast.USub: lambda a: -a,
+    }:
+        return {
+            ast.UAdd: lambda a: +a,
+            ast.USub: lambda a: -a,
+        }[type(n.op)](_eval(n.operand))
+
+    raise ValueError('bad expr')
+
+
+def grade(sample, item) -> float:
+    try:
+        expr = sample['output_json']['expression']
+        expr_val = safe_eval(expr)
+
+        # Check numbers used
+        if sorted(map(int, re.findall(r'-?\d+', expr))) != sorted(
+            map(int, json.loads(item['nums']))
+        ):
+            return 0
+
+        sr = int(float(sample['output_json']['result']))
+        it = int(float(item['target']))
+
+        if expr_val != sr:
+            return 1
+        if sr == it:
+            return 5
+        if abs(sr - it) <= 1:
+            return 4
+        if abs(sr - it) <= 5:
+            return 3
+        return 2
+
+    except:
+        return 0
+"""
+
+async def create_eval_python_grader(name: str, pass_threshold: float):
+    """
+    Create an evaluation with the given parameters.
+
+    Args:
+        pass_threshold (float): The pass threshold for the evaluation.
+        grader_model (str): The grader model to use.
+        name (str): The name of the evaluation.
+
+    Returns:
+        str: The ID of the created evaluation, or None if creation failed.
+    """
+    return await client.create_eval_sdk(
+            name=name,
+            data_source_config={
+                "type": "custom",
+                "include_sample_schema": True,
+                "item_schema": {
+                    "type": "object",
+                    "properties": {
+                        "target": {"type": "string"},
+                        "nums": {"type": "string"}
+                    }
+                }
+            },
+            testing_criteria=[
+                {
+                    "name": "custom grader",
+                    "type": "python",
+                    "source": python_grader_source,
+                    "pass_threshold": pass_threshold
+                }
+            ]
+        )
 
 async def create_eval_run(eval_id, file_id, model_deployment=None, eval_run_name=None, use_sample=True, system_prompt=""):
     """
