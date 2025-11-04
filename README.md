@@ -2,7 +2,7 @@
 This repository contains both end-to-end worked examples of fine-tuning in AI Foundry and a collection of sample datasets. Use this repo to explore practical fine-tuning workflows and access ready-to-use data for your own projects.
 
 ## Data sets
-This repository contains a collection of sample datasets that can be used to test and validate various customization techniques on the [Azure AI Foundry](http://ai.azure.com/). These are curated datasets created from various public HuggingFace datasets. 
+This repository contains a collection of sample datasets that can be used to test and validate various customization techniques on the [Azure AI Foundry](http://ai.azure.com/). These are curated datasets created from various public HuggingFace datasets. By running a demo, you consent to the download of a third-party dataset. In no event will Microsoft be liable for any damages arising from your use of these datasets.
 
 ### Purpose of these datasets
 
