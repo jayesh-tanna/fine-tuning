@@ -1,5 +1,5 @@
 """
-Simplified Azure AI Foundry Agent with MCP Server Integration
+Simplified Microsoft Foundry Agent with MCP Server Integration
 
 This is a working example that creates an agent and demonstrates the API usage.
 """
@@ -302,7 +302,7 @@ def main(model_name=None, seed=None):
         seed: Optional seed for deterministic outputs. If provided, enables deterministic mode with temperature=0
     """
     print(f"{Fore.GREEN}{Style.BRIGHT}{'=' * 70}")
-    print(f"🚀 RETAIL AGENT - Azure AI Foundry with MCP Integration")
+    print(f"🚀 RETAIL AGENT - Microsoft Foundry with MCP Integration")
     print(f"{'=' * 70}{Style.RESET_ALL}\n")
     
     # Initialize conversation logger
@@ -324,7 +324,7 @@ def main(model_name=None, seed=None):
     
     if not connection_string:
         print(f"{Fore.RED}❌ Error: AZURE_AI_PROJECT_CONNECTION_STRING is required in .env file{Style.RESET_ALL}")
-        print("\nPlease add your Azure AI Foundry project connection string to the .env file:")
+        print("\nPlease add your Microsoft Foundry project connection string to the .env file:")
         print("AZURE_AI_PROJECT_CONNECTION_STRING=your-connection-string-here")
         return
     
@@ -336,7 +336,7 @@ def main(model_name=None, seed=None):
     
     try:
         # Initialize Azure AI Project Client
-        print(f"{Fore.BLUE}📡 Connecting to Azure AI Foundry project...{Style.RESET_ALL}")
+        print(f"{Fore.BLUE}📡 Connecting to Microsoft Foundry project...{Style.RESET_ALL}")
         credential = DefaultAzureCredential()
         
         # Use the full connection string as endpoint
@@ -345,7 +345,7 @@ def main(model_name=None, seed=None):
             credential=credential
         )
         
-        print(f"{Fore.GREEN}✅ Connected to Azure AI Foundry project{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}✅ Connected to Microsoft Foundry project{Style.RESET_ALL}")
         
         # Create agent with MCP tool
         print(f"\n{Fore.BLUE}🤖 Creating agent with deployment: {Style.BRIGHT}{deployment_name}{Style.RESET_ALL}")

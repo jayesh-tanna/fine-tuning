@@ -1,7 +1,7 @@
 """
 Retail Agent Test Script
 
-Tests the Azure AI Foundry retail agent with various scenarios.
+Tests the Microsoft Foundry retail agent with various scenarios.
 Can be imported and used from Jupyter notebooks or run standalone.
 """
 
@@ -90,8 +90,8 @@ class RetailAgentTester:
 Help customers with their orders, returns, and account information."""
     
     def test_connection(self) -> bool:
-        """Test Azure AI Foundry connection."""
-        print(f"{Fore.CYAN}Testing Azure AI Foundry connection...{Style.RESET_ALL}")
+        """Test Microsoft Foundry connection."""
+        print(f"{Fore.CYAN}Testing Microsoft Foundry connection...{Style.RESET_ALL}")
         
         if not self.connection_string:
             print(f"{Fore.RED}✗ Missing AZURE_AI_PROJECT_CONNECTION_STRING{Style.RESET_ALL}")
@@ -107,7 +107,7 @@ Help customers with their orders, returns, and account information."""
                 endpoint=self.connection_string,
                 credential=credential
             )
-            print(f"{Fore.GREEN}✓ Connected to Azure AI Foundry{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}✓ Connected to Microsoft Foundry{Style.RESET_ALL}")
             return True
         except Exception as e:
             print(f"{Fore.RED}✗ Connection failed: {e}{Style.RESET_ALL}")
