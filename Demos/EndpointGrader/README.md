@@ -63,10 +63,12 @@ func azure functionapp publish countdown-endpoint-demo --python
 Without a key, you should get an HTTP 401 response when POSTing something:
 
 ```bash
+# via sh or bash, etc.
 curl -i -d '{}' https://<your-function-app-name>.azurewebsites.net/api/grader
 ```
 
 ```powershell
+# via powershell
 iwr -Method POST `
    -Headers @{"Content-Type" = "application/json"} `
    -Uri "https://<your-function-app-name>.azurewebsites.net/api/grader"
@@ -75,6 +77,7 @@ iwr -Method POST `
 The following example will fetch the key and use it with one of the test files:
 
 ```bash
+# via sh or bash, etc.
 curl -i -d "@test.json" \
    -H "X-Functions-Key: $(az functionapp keys list --resource-group <your-resource-group> \
       --name '<your-function-app-name>' --query 'functionKeys.default' --output tsv)" \
@@ -82,6 +85,7 @@ curl -i -d "@test.json" \
 ```
 
 ```powershell
+# via powershell
 iwr `
    -Uri "https://<your-function-app-name>.azurewebsites.net/api/grader" `
    -Method POST `
