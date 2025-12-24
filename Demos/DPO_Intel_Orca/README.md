@@ -61,9 +61,9 @@ This cookbook teaches you how to:
 DPO fine-tuning in Azure AI Foundry supports the following GPT models:
 
 - **gpt-4o**: Latest GPT-4 Optimized model
-- **gpt-4o-mini**: Cost-efficient variant of GPT-4o
 - **gpt-4.1**: GPT-4.1 base model
 - **gpt-4.1-mini**: Compact version of GPT-4.1
+- **gpt-4.1-nano**: Smallest and most cost-efficient GPT-4.1 variant
 
 > **Note**: Model availability may vary by region. Check the [Azure OpenAI model availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models) page for the most current regional support.
 
