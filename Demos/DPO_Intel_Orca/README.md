@@ -85,7 +85,7 @@ pip install -r requirements.txt
 
 ### 2. Set Up Environment Variables
 
-Create a .env file in this directory with your Azure credentials:
+Create a .env file in the root of this directory with your Azure credentials:
 
 ```
 AZURE_AI_PROJECT_ENDPOINT=<your-endpoint> 
@@ -124,8 +124,7 @@ The DPO format follows the Azure AI Projects SDK structure:
 
 The cookbook uses the following hyperparameters:
 
-- **Model**: gpt-4o-mini (or gpt-4o)
-- **Training Type**: Standard
+- **Model**: gpt-4.1-mini
 - **Epochs**: 3
 - **Batch Size**: 1
 - **Learning Rate Multiplier**: 1.0
