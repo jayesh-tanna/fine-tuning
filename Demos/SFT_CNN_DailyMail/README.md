@@ -155,16 +155,6 @@ The notebook includes sections for:
 - Validation loss tracking
 - Model deployment and testing
 
-## Use Cases
-
-This fine-tuned model can be used for:
-
-- **News aggregation**: Automatically summarize multiple news sources
-- **Content curation**: Create digests from long articles
-- **Information extraction**: Pull key points from detailed reports
-- **Reading assistance**: Generate TL;DR summaries for quick consumption
-- **Research support**: Summarize articles for literature reviews
-
 ## Next Steps
 
 After completing this cookbook, you can:
