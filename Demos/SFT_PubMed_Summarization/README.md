@@ -18,11 +18,11 @@ Medical research articles often contain complex scientific information, detailed
 
 **Source**: [PubMed Article Summarization Dataset on Kaggle](https://www.kaggle.com/datasets/thedevastator/pubmed-article-summarization-dataset)
 
-**Size**: ~12,658 article-abstract pairs (curated subset for demonstration)
-- Training set: ~11,000 examples (~202 MB)
+**Size**: ~6,658 article-abstract pairs (curated subset for demonstration)
+- Training set: ~5,000 examples (~91 MB)
 - Validation set: ~1,658 examples (~31 MB)
 
-> **Note**: This is a carefully curated subset of the full PubMed dataset (9% of the original 119,924 training examples), optimized for efficient training and demonstration purposes while maintaining representative coverage of medical research topics.
+> **Note**: This is a carefully curated subset of the full PubMed dataset (4% of the original 119,924 training examples), optimized for efficient training and demonstration purposes while maintaining representative coverage of medical research topics and staying within GitHub's file size limits.
 
 **What the Data Contains**:
 The PubMed dataset consists of medical and scientific research articles paired with professionally-written abstracts. Each example includes:
