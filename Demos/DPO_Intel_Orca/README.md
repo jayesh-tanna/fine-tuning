@@ -46,9 +46,11 @@ This cookbook teaches you how to:
 1. Set up your Azure AI environment for DPO fine-tuning
 2. Prepare and format DPO training data in JSONL format
 3. Upload datasets to Azure AI
-4. Create and configure a DPO fine-tuning job
-5. Monitor training progress
-6. Deploy and inference your fine-tuned model
+4. Evaluate base model performance before fine-tuning
+5. Create and configure a DPO fine-tuning job
+6. Monitor training progress
+7. Deploy and inference your fine-tuned model
+8. Evaluate fine-tuned model and compare improvements using Azure AI Evaluation SDK
 
 ## Prerequisites
 
@@ -88,11 +90,17 @@ pip install -r requirements.txt
 Create a .env file in the root of this directory with your Azure credentials:
 
 ```
+# Required for DPO Fine-Tuning
 AZURE_AI_PROJECT_ENDPOINT=<your-endpoint> 
-MODEL_NAME=<your-gpt-model-name>
 AZURE_SUBSCRIPTION_ID=<your-subscription-id>
 AZURE_RESOURCE_GROUP=<your-resource-group>
 AZURE_AOAI_ACCOUNT=<your-foundry-account-name>
+MODEL_NAME=<your-base-model-name>
+
+# Required for Model Evaluation
+AZURE_OPENAI_ENDPOINT=<your-azure-openai-endpoint>
+AZURE_OPENAI_KEY=<your-azure-openai-api-key>
+DEPLOYMENT_NAME=<your-deployment-name>
 ```
 
 ### 3. Run the Notebook
@@ -146,8 +154,26 @@ The notebook includes sections for:
 
 - Real-time training progress monitoring
 - Validation loss tracking
-- Model performance evaluation
+- Model performance evaluation with Azure AI Evaluation SDK
 - Inference examples with the fine-tuned model
+
+### Evaluation Metrics for DPO Fine-Tuning
+
+This cookbook uses the **Azure AI Evaluation SDK** to comprehensively assess model quality before and after DPO fine-tuning. The Azure AI Evaluation SDK provides production-ready evaluators that use GPT models as judges to score your model outputs across multiple dimensions.
+
+**5 Key Metrics for DPO Evaluation**:
+
+1. **Coherence (1-5)**: Measures logical flow and structure - ensures responses are well-organized and make sense
+2. **Fluency (1-5)**: Assesses grammatical correctness and natural language quality - validates human-like writing
+3. **Relevance (1-5)**: Evaluates how directly the response addresses the query - confirms the model stays on-topic
+4. **Groundedness (1-5)**: Checks factual accuracy against provided context - prevents hallucinations and unsupported claims
+5. **Similarity (1-5)**: Measures semantic alignment with preferred outputs - quantifies how well the model learned DPO preferences
+
+**Why These Metrics Matter for DPO**:
+- DPO trains models to prefer high-quality responses over low-quality alternatives
+- These metrics validate that the fine-tuned model generates responses that are both accurate and aligned with human preferences
+- Comparing pre- and post-fine-tuning scores demonstrates the effectiveness of DPO training
+- **Similarity** and **Relevance** typically show the largest improvements after DPO fine-tuning
 
 ## Troubleshooting
 
